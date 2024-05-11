@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,16 +25,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 public class MainProgram {
-	/*
-	Thread SoundPlayer = new Thread(new SoundPlayer(""));
-	SoundPlayer.start();
-	*/
-	
+
 	private static ArrayList <String> MusicPath = new ArrayList<String>();
-	private static JComboBox<String> ComboBox_Music = new JComboBox<>();
+	private static JComboBox ComboBox_Music = new JComboBox<>();
 	private static JTextField  TextFieldFrequency;
-	private static JLabel ExportIndicator = new JLabel();
+	private static JLabel ExportIndicator = new JLabel(); 
+	private static AudioFormat SampleFormat;
 	private static ImageIcon BackgroundImage;
 	private static ImageIcon AgreeExport;
 	private static ImageIcon DisagreeExport;
@@ -43,8 +43,6 @@ public class MainProgram {
 	private static ImageIcon InfoImage;
 	private static ImageIcon ExportImage;
 	private static ImageIcon CreditsImage;
-	private static AudioFormat SampleFormat;
-	private static double Frequency = 0.0;
 	private static JButton SelectSampleButton;
 	private static JButton SelectFrequencyButton;
 	private static JButton CreditsButton;
@@ -52,6 +50,7 @@ public class MainProgram {
 	private static JButton LoopButton;
 	private static JButton InfoButton;
 	private static JButton ExportButton;
+	private static double Frequency = 0.0;
 	
 	private static Clip clip;
 	private static long pause_moment;
@@ -68,13 +67,14 @@ public class MainProgram {
 				Criar_JTextField_Frequency();
 				Criar_Botoes();
 				Criar_Janela();
+				CheckingIndicator();
 			}
 		});
 	}
 
 	private static void Star_Program() {
 		
-		ImageIcon Gif = new ImageIcon("res/demod/gif.gif");
+		ImageIcon Gif = new ImageIcon(MainProgram.class.getClassLoader().getResource("mod/gif.gif"));
 		JLabel Text = new JLabel("Seja bem vindo ao modulador AM Java Edition", Gif, JLabel.CENTER);
 		Text.setForeground(Color.DARK_GRAY);
 		Text.setFont(new Font("Helvetica",Font.BOLD, 15));
@@ -110,13 +110,32 @@ public class MainProgram {
 	}
 	
 	private static void Criar_ComboBox() {
-		ComboBox_Music.setBounds(120,130,110,30);	
+		/*
+		MainProgram Instance = new MainProgram();
+		
+		URL sample1 = Instance.getClass().getResource("samples/sample1.wav");
+		URL sample2 = Instance.getClass().getResource("samples/sample2.wav");
+		URL sample3 = Instance.getClass().getResource("samples/sample3.wav");
+		
+		MusicPath.add(sample1.getPath());
+		MusicPath.add("sample1.wav");
+		MusicPath.add(sample2.getPath());
+		MusicPath.add("sample2.wav");
+		MusicPath.add(sample3.getPath());
+		MusicPath.add("sample3.wav");
+		
+		ComboBox_Music.addItem("sample1.wav");
+		ComboBox_Music.addItem("sample2.wav");
+		ComboBox_Music.addItem("sample3.wav");
+		*/
+		
+		ComboBox_Music.setBounds(115,130,110,30);
 	}
 	
 	private static void Criar_JTextField_Frequency() {
 		TextFieldFrequency = new JTextField();
 		TextFieldFrequency.setText("Digite hertz");
-		TextFieldFrequency.setBounds(150, 220, 150, 30);
+		TextFieldFrequency.setBounds(180, 220, 180, 30);
 		TextFieldFrequency.setToolTipText("Seleciona a frequência da portadora.");
 		TextFieldFrequency.setFont(new Font("Arial",Font.CENTER_BASELINE,15));
 		TextFieldFrequency.setBackground(Color.white);
@@ -125,138 +144,76 @@ public class MainProgram {
 	}
 	
 	private static void Criar_Botoes() {
-		SelectSampleButton = new JButton("Select File");
+		SelectSampleButton = new JButton("WAV File");
 		SelectSampleButton.setBounds(10,130,100,30);
 		SelectSampleButton.setToolTipText("Seleciona o arquivo da música");
 		SelectSampleButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("File sample");
-				//declarando e filtrando
-				JFileChooser fileChooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos WAV", "wav");
-                fileChooser.setFileFilter(filter);
-                
-                int returnValue = fileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String Musica = selectedFile.getName();
-                    if (Musica.toLowerCase().endsWith(".wav")) {
-                    	MusicPath.add(selectedFile.getPath());
-                    	MusicPath.add(selectedFile.getName());
-                        ComboBox_Music.addItem(Musica);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Selecione um arquivo .wav válido.","Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+				AddSample();
 			}});
 		
 		SelectFrequencyButton = new JButton("Select Frequency");
-		SelectFrequencyButton.setBounds(10,220,135,30);
+		SelectFrequencyButton.setBounds(10,220,165,30);
 		SelectFrequencyButton.setToolTipText("Seleciona a frequência");
 		SelectFrequencyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				System.out.println("Frequencia: "+TextFieldFrequency.getText()+" Hertz");
-				
 				Frequency = Double.parseDouble(TextFieldFrequency.getText());
 
 			}});
 		
 		CreditsButton = new JButton(CreditsImage);
-		CreditsButton.setBounds(10,10,35,35);
+		CreditsButton.setBounds(10,10,40,40);
 		CreditsButton.setBackground(new Color(158, 193, 231));
 		CreditsButton.setToolTipText("Credits");
-		//credits.setContentAreaFilled(false);
-        //credits.setBorderPainted(false);
 		CreditsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null,"Desenvolvido por Gabriel Oliveira dos Santos"
-						+ " GitHub: Hypothasis.","Creditos", JOptionPane.PLAIN_MESSAGE);
-				System.out.println("-Tamanho da list unmod: "+ MusicPath.size());
+				JOptionPane.showMessageDialog(null,
+						"Desenvolvido por Gabriel Oliveira dos Santos \nGitHub: Hypothasis",
+						"Créditos",
+						JOptionPane.PLAIN_MESSAGE);
+				
+				System.out.println("-Tamanho da lista: "+ MusicPath.size());
 				for(int i=0; i < MusicPath.size();i++) {
 					System.out.println(MusicPath.get(i));
 				}
 				System.out.println("");
-				
-				System.err.println("Format_sample :" + SampleFormat);
 			}});
 		
 		PlayButton = new JButton(PlayImage);
-		PlayButton.setBounds(240,130,50,50);
+		PlayButton.setBounds(230,130,50,50);
 		PlayButton.setToolTipText("Toca a música");
 		PlayButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("play unmod");
-				String selecao = (String) ComboBox_Music.getSelectedItem();
-				System.out.println(selecao);
-				
-				 for (int i = 0; i < MusicPath.size(); i++) {
-			            //System.out.println(CaminhoMusica.get(i));
-					 if(MusicPath.get(i).equals(selecao)) {
-						 //acha o nome da musica. i-1 = endereço da musica
-						 System.out.println(MusicPath.get(i-1));
-						 Play(MusicPath.get(i-1));
-						 break;
-					 }
-			        }
+				String MusicPath = GetAbsoluteMusicPath();
+				if(isOpenAudio(MusicPath)) {
+					Play(MusicPath);				
+				}
 			}});
 		
 		LoopButton = new JButton(LoopImage);
-		LoopButton.setBounds(290,130,50,50);
+		LoopButton.setBounds(280,130,50,50);
 		LoopButton.setToolTipText("Pause e recomeça a música");
 		LoopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("loop unmod");
-				String selecao = (String) ComboBox_Music.getSelectedItem();
-				System.out.println(selecao);
-				
-				 for (int i = 0; i < MusicPath.size(); i++) {
-			            //System.out.println(CaminhoMusica.get(i));
-					 if(MusicPath.get(i).equals(selecao)) {
-						 //acha o nome da musica. i-1 = endereço da musica
-						 System.out.println(MusicPath.get(i-1));
-						 Loop();
-						 break;
-					 }
-			        }			
+				Loop();	
 			}});
 		
 		InfoButton = new JButton(InfoImage);
-		InfoButton.setBounds(340,130,50,50);
+		InfoButton.setBounds(330,130,50,50);
 		InfoButton.setToolTipText("Formatação da música");
 		InfoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(ComboBox_Music.getSelectedItem());
-				System.out.println("tamanho da combobox unmod: "+ComboBox_Music.getItemCount());
-				
-				//se o info nao tiver audio
-				if(ComboBox_Music.getSelectedItem() == null) {
-					JOptionPane.showMessageDialog(null,"Nenhum áudio selecionado","Info unmod", JOptionPane.INFORMATION_MESSAGE);
+				String SamplePath = GetAbsoluteMusicPath();
+				if(!isComboboxEmpty()) {
+					isAudioFormatCorrect(SamplePath);
 				}
-				
-				for(int i = 0; i < MusicPath.size();i++) {
-					if(MusicPath.get(i).equals(ComboBox_Music.getSelectedItem())) {
-						System.out.print("caminho musica: "+MusicPath.get(i-1));
-						File unmod_info_music = new File(MusicPath.get(i-1));
-						try {
-							AudioInputStream song = AudioSystem.getAudioInputStream(unmod_info_music);
-							AudioFormat format_song = song.getFormat();
-							SampleFormat= format_song;
-							JOptionPane.showMessageDialog(null,"Formato do audio: "+format_song,"Info unmod", JOptionPane.INFORMATION_MESSAGE);
-							SampleFormat = null;
-						} catch (UnsupportedAudioFileException | IOException e1) {
-							System.err.println("Error: format song unmod");
-							e1.printStackTrace();
-						}
-						break;
-					}
-				}				
 			}});
 		
 		ExportButton = new JButton(ExportImage);
@@ -265,66 +222,17 @@ public class MainProgram {
 		ExportButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Export");
-				if(MusicPath.size() != 0 && Frequency > 0)
-				{						
-					//Adequirindo o path dos arquivos selecionados
-				String sample_path = null;
-				
-				for(int i = 0; i < MusicPath.size();i++) {
-					if(MusicPath.get(i).equals(ComboBox_Music.getSelectedItem())) {
-						sample_path = MusicPath.get(i-1);
-						break;
-					}
+				Loop();
+				String SamplePath = GetAbsoluteMusicPath();
+				if(isAudioFormatCorrect(SamplePath)) {
+					ExportAudio(SamplePath);	
 				}
-				
-				
-				//adquirindo o format audio do audio
-				
-				
-				for(int i = 0; i < MusicPath.size();i++) {
-					if(MusicPath.get(i).equals(ComboBox_Music.getSelectedItem())) {
-						System.out.print("caminho musica: "+MusicPath.get(i-1));
-						File mod_info_music = new File(MusicPath.get(i-1));
-						try {
-							AudioInputStream song = AudioSystem.getAudioInputStream(mod_info_music);
-							AudioFormat format_song = song.getFormat();
-							SampleFormat = format_song;
-						} catch (UnsupportedAudioFileException | IOException e1) {
-							e1.printStackTrace();
-						}
-						break;
-					}
-				}
-				
-				//Secando se esta certo para exportar
-				
-				System.err.println("Caminho do sample: "+ sample_path);
-				System.err.println("formato do sample: "+ SampleFormat);
-				
-				ExportIndicator.setIcon(AgreeExport);
-				try {
 					
-					//Chamando a classe para exportar
-					new modulação_e_demodulação(sample_path, Frequency);
-				
-				} catch (IOException | UnsupportedAudioFileException e1) {
-					e1.printStackTrace();
-				}
-				
-				ExportIndicator.setIcon(DisagreeExport);
-				} else {
-					JOptionPane.showMessageDialog(null,"                                                      "
-							+ "ERRO NA EXPORTAÇÃO!"
-							+ "\nCheque se o áudio foi selecionado e "
-							+ "você apertou o borão de selecionar a frequência."
-							+ "","Exportation", JOptionPane.WARNING_MESSAGE);
-				}
 			}});
 		
 	}
 
-	private static void Criar_Janela() {
+	protected static void Criar_Janela() {
 		JLabel Title = new JLabel(TitleImage);
 		Title.setBounds(100,5,200,71);
 		Title.setToolTipText("Main Title");
@@ -359,54 +267,161 @@ public class MainProgram {
 		window.setVisible(true);
 				
 		window.add(base);
-		window.pack();
+		//window.pack();
 		
+	}
+	
+	protected static void AddSample() {
+		JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos WAV", "wav");
+        fileChooser.setFileFilter(filter);
+        
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String MusicName = selectedFile.getName();
+            if (MusicName.toLowerCase().endsWith(".wav")) {
+            	MusicPath.add(selectedFile.getPath());
+            	MusicPath.add(selectedFile.getName());
+                ComboBox_Music.addItem(MusicName);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um arquivo .wav válido.","Error Audio File", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+		
+	}
+
+	protected static boolean isComboboxEmpty() {
+		if(ComboBox_Music.getSelectedItem() == null || ComboBox_Music.getItemCount() == 0) {
+			JOptionPane.showMessageDialog(null,"Nenhum áudio selecionado ou ComboBox Vazio","Info unmod", JOptionPane.INFORMATION_MESSAGE);
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	protected static boolean isOpenAudio(String musicPath2) {
+		File AudioFile = new File(musicPath2);
+		AudioInputStream Audio;
+		try {
+			Audio = AudioSystem.getAudioInputStream(AudioFile);
+			AudioFormat AudioFormat = Audio.getFormat();
+			SampleFormat= AudioFormat;
+			clip = AudioSystem.getClip();
+			clip.open(Audio);
+		
+			return true;
+		} catch (LineUnavailableException e) {
+			JOptionPane.showMessageDialog(null,"LineUnavailableException: Erro no formato de áudio\nEscolha um arquivo WAV PCM_SIGNED 16Bits?","Info Song", JOptionPane.INFORMATION_MESSAGE);
+			e.printStackTrace();
+			return false;
+		} catch (UnsupportedAudioFileException e) {
+			JOptionPane.showMessageDialog(null,"UnsupportedAudioFileException: Error audio Unsupported","Info Song", JOptionPane.INFORMATION_MESSAGE);
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,"IOException: Erro de path de audio, path errado","Info Song", JOptionPane.INFORMATION_MESSAGE);
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	protected static boolean isAudioFormatCorrect(String SamplePath) {
+		File AudioFile = new File(SamplePath);
+		AudioInputStream Audio;
+		try {
+			Audio = AudioSystem.getAudioInputStream(AudioFile);
+			AudioFormat AudioFormat = Audio.getFormat();
+			SampleFormat= AudioFormat;
+			clip = AudioSystem.getClip();
+			clip.open(Audio);
+			JOptionPane.showMessageDialog(null,"Formato do audio: "+AudioFormat,"Info Song", JOptionPane.INFORMATION_MESSAGE);
+			
+			return true;
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			JOptionPane.showMessageDialog(null,"UnsuportedAudioFileException: Erro no formato de áudio\nVocê escolheu um arquivo Wav PCM_SIGNED 16Bits?","Info Song", JOptionPane.INFORMATION_MESSAGE);
+			e.printStackTrace();
+			return false;
+		}		
+	}
+
+	protected static void ExportAudio(String SamplePath) {
+		
+		//Chama a Classe como uma Thread
+	
+		Thread Modulator = new Thread(new De_ModulatorExport(SamplePath,Frequency));
+		Modulator.start();
+		
+		TextFieldFrequency.setText("");
+		Frequency = 0.0;
+	} 
+	
+	protected static String GetAbsoluteMusicPath() {
+		String SamplePath = null;					
+		for(int i = 0; i < MusicPath.size();i++) {
+			if(MusicPath.get(i).equals(ComboBox_Music.getSelectedItem())) {
+				SamplePath = MusicPath.get(i-1);
+				break;
+				}
+			}
+		return SamplePath;
 	}
 	
 	protected static void Play(String SongPath) {
 		if(clip != null && clip.isRunning()) {
 		       System.err.println("***Alerta de delay previnido***");
+		       
 	    	} else {
-	    		 try {
-	 	        	/* Arquivo para musica*/
-	 	            File Music = new File(SongPath);
-	 	            /* Music para song, tranforma um file em uma song*/
-	 	            AudioInputStream song = AudioSystem.getAudioInputStream(Music);
-	 	            System.out.println(song.markSupported());
-	 	            System.out.println(song.getFormat());
-	 	            clip = AudioSystem.getClip();
-	 	            System.out.println(clip.getFormat());
-	 	            clip.open(song);
-	 	            
-	 	            if(pause_actived == false) {
-	 	            	clip.start();
-	 	            } else {
-	 	            	clip.setMicrosecondPosition(pause_moment);
-	 	            	clip.start();
-	 	            }
-	 	            
-	 	        }
-	 	        	catch (Exception e) {
-	 	        		e.printStackTrace();
-	     	}
-	    	}
-		
+    		 try {
+ 	        	/* Arquivo para musica*/
+ 	            File Music = new File(SongPath);
+ 	            /* Music para song, tranforma um file em uma song*/
+ 	            AudioInputStream song = AudioSystem.getAudioInputStream(Music);
+ 	            System.out.println(song.markSupported());
+ 	            System.out.println(song.getFormat());
+ 	            clip = AudioSystem.getClip();
+ 	            System.out.println(clip.getFormat());
+ 	            clip.open(song);
+ 	            
+ 	            if(pause_actived == false) {
+ 	            	clip.start();
+ 	            } else {
+ 	            	clip.setMicrosecondPosition(pause_moment);
+ 	            	clip.start();
+ 	            }
+ 	            
+ 	        }catch (Exception e) {
+ 	        	e.printStackTrace();
+ 	        }
+    	}
 	}
 	
 	protected static void Loop() {
-		if(clip != null && clip.isRunning() ) {
-    		clip.setMicrosecondPosition(0);
-    		pause_moment = 0;
-    		pause_actived = false;
-    		clip.stop();
-    	}
-    	else {
-    		clip.setMicrosecondPosition(0);
-    		pause_moment = 0;
-    		pause_actived = false;
-    		clip.stop();
-    	}
-		
+		if(clip != null) {
+			clip.setMicrosecondPosition(0);
+			pause_moment = 0;
+			pause_actived = false;
+			clip.stop();
+		}	
 	}
 
+	protected static void CheckingIndicator() {
+		Thread checking = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					if(ComboBox_Music.getSelectedItem() != null && Frequency != 0.0) {
+						ExportIndicator.setIcon(AgreeExport);
+					}else {
+						ExportIndicator.setIcon(DisagreeExport);
+					}
+				}
+				
+			}
+		});
+		checking.start();
+	}
 }
