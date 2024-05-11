@@ -7,7 +7,7 @@ O projeto consiste na Modulação de uma sinal sonoro, de acordo com uma frequê
 Esse software tem muito mais peso pelo fator educativo do que o que realmente acontece no mundo real, pois na realidade usando frequências eletromagnéticas, que não é possível produzir por software.
 
 ### Como utilizar o software
-Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar no Java Clip arquivos se áudio tipo.wav, .acc (com formato PCM 16bit). 
+Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar nativamente ,no Java Clip, arquivos de áudio do tipo .WAV,.AU ,.AIFF (com formato PCM 16bit). 
 
 Você seleciona,com o botão, um áudio através do JChooseFiler
 que é possível dar play, dar um loop e você saber qual é as informações do áudio.
