@@ -1,2 +1,2 @@
-# Modula-o-e-Demodula-o-AM-usando-Java
-Aplicação com Modulação e Demodulação usando Java com Swing
+# Modulação e Demodulação AM usando Java Swing
+Aplicação com Modulação e Demodulação AMusando Java com GUI Java Swing
