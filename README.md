@@ -39,7 +39,7 @@ A tela inicial ao executar o programa deve aparece o JDialogMessage como a image
   <img src=".github/Tela%20Inicial.png" alt="Imagem Exemplo">
 </p>
 
-Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar nativamente ,no Java Clip, arquivos de áudio do tipo .WAV,.AU ,.AIFF (com formato PCM 16bit).   
+Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar nativamente ,no Java Clip, arquivos de áudio do tipo .WAV, .AU , .AIFF (com formato PCM 16bit).   
 Você seleciona, com o botão, um áudio através do JChooseFiler no botao "WAV File".
 
 <p align="center">
