@@ -9,6 +9,28 @@ O projeto consiste na Modulação de uma sinal sonoro, de acordo com uma frequê
 
 Esse software tem muito mais peso pelo fator educativo do que o que realmente acontece no mundo real, pois na realidade usando frequências eletromagnéticas, que não é possível produzir por software.
 
+### Estrutura de pastas
+```
+App/                      # Programa Compilado e Exportado para Linux e Windows
+├── Linux/                # Linux Jar
+│   └── [arquivos .jar]
+├── Windows/              # Windows .exe
+│   └── [arquivos .exe]
+
+Java/                     
+├── .settings/            # Arquivos de configurações do Eclipse IDE
+│   └── [arquivos de configuração]
+├── WAV samples/          # Exemplo de WAV para programa
+│   └── [arquivos WAV]
+├── bin/                  # Binários do programa
+│   └── [arquivos binários]
+├── res/                  # Recursos do programa
+│   └── mod/              # Imagens e Gifs que são exportados
+│       └── [arquivos de imagem e GIFs]
+└── src/                  # Código fonte
+    └── [arquivos .java]
+```
+
 ### Como utilizar o software
 
 A tela inicial ao executar o programa deve aparece o JDialogMessage como a imagem abaixo descreve:
@@ -44,19 +66,5 @@ Depois de exportar e salvar o áudio, é possível rodar um simples Soundplayer 
 ### Demodular:
 
 Para demodular é o mesmo processo, seleciona o audio modulado e a mesma FREQUẼNCIA escolhida anteriormente, exporta e salva o arquivo. Assim você terá um áudio similar ao áudio inicial.
-
-### Estrutura de pastas
-
-|--App
-|
-|
-|
-|
-   /Linux
-   /Windows
-   
- /Java
- 
-   /src
 
 
