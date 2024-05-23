@@ -11,31 +11,52 @@ Esse software tem muito mais peso pelo fator educativo do que o que realmente ac
 
 ### Como utilizar o software
 
+A tela inicial ao executar o programa deve aparece o JDialogMessage como a imagem abaixo descreve:
+
 ![](.github/Tela%20Inicial.png)
 
-Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar nativamente ,no Java Clip, arquivos de áudio do tipo .WAV,.AU ,.AIFF (com formato PCM 16bit). 
+Na pasta src, temos uma pasta de arquivos .WAV, que foram disponibilizados para rodar nessa aplicação como exemplo, tendo em vista que só é possível rodar nativamente ,no Java Clip, arquivos de áudio do tipo .WAV,.AU ,.AIFF (com formato PCM 16bit).   
+Você seleciona, com o botão, um áudio através do JChooseFiler no botao "WAV File".
 
-Você seleciona,com o botão, um áudio através do JChooseFiler
-que é possível dar play, dar um loop e você saber qual é as informações do áudio.
+![](.github/JFileChooserAudio.png)
 
-![]()
+É possível tocar o Áudio (play) , dar um loop e você saber qual é as informações do áudio com os botões descritos abaixo:
 
-Selecionar uma frequência é essencial para poder exportar o áudio modulado, é muito importante saber que o mesmo valor de frequência selecionada para modular tem que ser o mesmo para a frequência ao demodular.
+![](.github/Botoes.png)
 
-![]()
+Selecionar uma frequência é essencial para poder exportar o áudio modulado, pois o codigo tem um Thread que fica checando se tem uma frequencia selecionada e um áudio tambem, so conseguindo exportar quando os dois estao preenchidos.
+É muito importante saber que o mesmo valor de FREQUÊNCIA selecionada para modular tem que ser o mesmo para a frequência ao demodular.
+
+![](.github/Exportação.png)
+
+Ao exportar é checado o formato de áudio, se for um formato usado no Java Clip, ele ira mostrar o formato de áudio na tela sem erro algum.
+
+![](.github/Formato%20Audio%20Exportação.png)
+
+Escolher o nome do arquivo de áudio.
+
+![](.github/JfileChooser.png)
 
 Depois de exportar e salvar o áudio, é possível rodar um simples Soundplayer para tocar o áudio modulado, para poder escutar como o Áudio ficou.
 
-![]()
+![](.github/SoundPlayer.png)
 
-Para demodular é o mesmo processo, seleciona o audio modulado e a mesma frequência, exporta e salva o arquivo. Assim você terá um áudio similar ao áudio inicial.
+### Demodular:
+
+Para demodular é o mesmo processo, seleciona o audio modulado e a mesma FREQUẼNCIA escolhida anteriormente, exporta e salva o arquivo. Assim você terá um áudio similar ao áudio inicial.
 
 ### Estrutura de pastas
 
-/App
-  /Linux
-  /Windows
-/Java
-  /src
+|--App
+|
+|
+|
+|
+   /Linux
+   /Windows
+   
+ /Java
+ 
+   /src
 
 
