@@ -81,4 +81,7 @@ Depois de exportar e salvar o áudio, é possível rodar um simples Soundplayer 
 
 Para demodular é o mesmo processo, seleciona o audio modulado e a mesma FREQUÊNCIA escolhida anteriormente, exporta e salva o arquivo. Assim você terá um áudio similar ao áudio inicial.
 
+### Video:
 
+Acesso para o vídeo da aplicação em execução no LinkedIn:
+[video](https://www.linkedin.com/posts/gabriel-oliveira-5100b129b_essa-aplica%C3%A7%C3%A3o-foi-feita-na-disciplina-de-activity-7199571977731289088-wsj-?utm_source=share&utm_medium=member_desktop)
